@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:disease/model/Epidemi.dart';
 import 'package:flutter/material.dart';
 import 'package:disease/api/api.dart';
@@ -30,6 +29,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
 
   List<ExpansionPanel> ExpansionPanelList1 = new List();
   Widget swiperWidget;
+  Widget swiperWidget1;
 
   @override
   void initState() {
@@ -44,8 +44,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
         builder: (context, snap) {
           if (snap.hasData) {
             epidemic = epidemiFromJson(convert.jsonEncode(snap.data));
-            _expansionPanelListWidget(epidemic);
             _swiperWidget(epidemic, context);
+            _swiperWidget1(epidemic, context);
+            _expansionPanelListWidget(epidemic);
             ContainerWidget = buildContainer(epidemic);
             return Scaffold(
               appBar: AppBar(
@@ -62,6 +63,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                     epidemic = epidemic;
                     _expansionPanelListWidget(epidemic);
                     _swiperWidget(epidemic, context);
+                    _swiperWidget1(epidemic, context);
                     ContainerWidget = buildContainer(epidemic);
                   });
                 },
@@ -103,7 +105,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                   ),
                   Text(
                     DateTime.fromMillisecondsSinceEpoch(
-                            epidemic.newslist[0].desc.modifyTime)
+                            epidemic.data.desc.modifyTime)
                         .toString()
                         .substring(0, 19),
                     style: TextStyle(color: Colors.grey, fontSize: 14.0),
@@ -127,7 +129,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            epidemic.newslist[0].desc.confirmedCount.toString(),
+                            epidemic.data.desc.confirmedCount.toString(),
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold,
@@ -148,12 +150,12 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          epidemic.newslist[0].desc.confirmedIncr >= 0
+                          epidemic.data.desc.confirmedIncr >= 0
                               ? Icon(Icons.trending_up,
                                   color: Colors.red[900], size: 15.0)
                               : Icon(Icons.trending_down),
                           Text(
-                            epidemic.newslist[0].desc.confirmedIncr.toString(),
+                            epidemic.data.desc.confirmedIncr.toString(),
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold,
@@ -172,7 +174,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            epidemic.newslist[0].desc.seriousCount.toString(),
+                            epidemic.data.desc.seriousCount.toString(),
                             style: TextStyle(
                                 color: Colors.red[800],
                                 fontWeight: FontWeight.bold,
@@ -193,13 +195,13 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          epidemic.newslist[0].desc.seriousIncr >= 0
+                          epidemic.data.desc.seriousIncr >= 0
                               ? Icon(Icons.trending_up,
                                   color: Colors.red[900], size: 15.0)
                               : Icon(Icons.trending_down,
                                   color: Colors.green[900], size: 15.0),
                           Text(
-                            epidemic.newslist[0].desc.seriousIncr.toString(),
+                            epidemic.data.desc.seriousIncr.toString(),
                             style: TextStyle(
                                 color: Colors.red[800],
                                 fontWeight: FontWeight.bold,
@@ -217,9 +219,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                              epidemic.newslist[0].desc.suspectedCount
-                                  .toString(),
+                          Text(epidemic.data.desc.suspectedCount.toString(),
                               style: TextStyle(
                                   color: Colors.red[300],
                                   fontWeight: FontWeight.bold,
@@ -239,14 +239,12 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          epidemic.newslist[0].desc.suspectedIncr >= 0
+                          epidemic.data.desc.suspectedIncr >= 0
                               ? Icon(Icons.trending_up,
                                   color: Colors.red[900], size: 15.0)
                               : Icon(Icons.trending_down,
                                   color: Colors.green[900], size: 15.0),
-                          Text(
-                              epidemic.newslist[0].desc.suspectedIncr
-                                  .toString(),
+                          Text(epidemic.data.desc.suspectedIncr.toString(),
                               style: TextStyle(
                                   color: Colors.red[300],
                                   fontWeight: FontWeight.bold,
@@ -263,7 +261,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(epidemic.newslist[0].desc.deadCount.toString(),
+                          Text(epidemic.data.desc.deadCount.toString(),
                               style: TextStyle(
                                   color: Colors.redAccent,
                                   fontWeight: FontWeight.bold,
@@ -283,12 +281,12 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          epidemic.newslist[0].desc.deadIncr >= 0
+                          epidemic.data.desc.deadIncr >= 0
                               ? Icon(Icons.trending_up,
                                   color: Colors.red[900], size: 15.0)
                               : Icon(Icons.trending_down,
                                   color: Colors.green[900], size: 15.0),
-                          Text(epidemic.newslist[0].desc.deadIncr.toString(),
+                          Text(epidemic.data.desc.deadIncr.toString(),
                               style: TextStyle(
                                   color: Colors.redAccent,
                                   fontWeight: FontWeight.bold,
@@ -305,7 +303,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(epidemic.newslist[0].desc.curedCount.toString(),
+                          Text(epidemic.data.desc.curedCount.toString(),
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -325,12 +323,12 @@ class _EpidemicMapState extends State<EpidemicMap> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          epidemic.newslist[0].desc.curedIncr >= 0
+                          epidemic.data.desc.curedIncr >= 0
                               ? Icon(Icons.trending_up,
                                   color: Colors.green, size: 15.0)
                               : Icon(Icons.trending_down,
                                   color: Colors.green[900], size: 15.0),
-                          Text(epidemic.newslist[0].desc.curedIncr.toString(),
+                          Text(epidemic.data.desc.curedIncr.toString(),
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -362,11 +360,12 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               color: Colors.black,
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
-                      Text(
-                        epidemic.newslist[0].desc.note2.substring(
-                            epidemic.newslist[0].desc.note2.indexOf("：") + 1,
-                            epidemic.newslist[0].desc.note2.length),
-                      )
+                      Expanded(
+                          child: Text(
+                        epidemic.data.desc.note2.substring(
+                            epidemic.data.desc.note2.indexOf("：") + 1,
+                            epidemic.data.desc.note2.length),
+                      ))
                     ],
                   ),
                   Padding(
@@ -387,9 +386,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               color: Colors.black,
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
-                      Text(epidemic.newslist[0].desc.note1.substring(
-                          epidemic.newslist[0].desc.note1.indexOf("：") + 1,
-                          epidemic.newslist[0].desc.note1.length))
+                      Text(epidemic.data.desc.note1.substring(
+                          epidemic.data.desc.note1.indexOf("：") + 1,
+                          epidemic.data.desc.note1.length))
                     ],
                   ),
                   Padding(
@@ -411,9 +410,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
                       Expanded(
-                        child: Text(epidemic.newslist[0].desc.note3.substring(
-                            epidemic.newslist[0].desc.note3.indexOf("：") + 1,
-                            epidemic.newslist[0].desc.note3.length)),
+                        child: Text(epidemic.data.desc.note3.substring(
+                            epidemic.data.desc.note3.indexOf("：") + 1,
+                            epidemic.data.desc.note3.length)),
                       )
                     ],
                   ),
@@ -437,12 +436,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
                       Expanded(
-                          child: Text(epidemic.newslist[0].desc.remark1
-                              .substring(
-                                  epidemic.newslist[0].desc.remark1
-                                          .indexOf("：") +
-                                      1,
-                                  epidemic.newslist[0].desc.remark1.length)))
+                          child: Text(epidemic.data.desc.remark1.substring(
+                              epidemic.data.desc.remark1.indexOf("：") + 1,
+                              epidemic.data.desc.remark1.length)))
                     ],
                   ),
                   Padding(
@@ -464,12 +460,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
                       Expanded(
-                          child: Text(epidemic.newslist[0].desc.remark2
-                              .substring(
-                                  epidemic.newslist[0].desc.remark2
-                                          .indexOf("：") +
-                                      1,
-                                  epidemic.newslist[0].desc.remark2.length)))
+                          child: Text(epidemic.data.desc.remark2.substring(
+                              epidemic.data.desc.remark2.indexOf("：") + 1,
+                              epidemic.data.desc.remark2.length)))
                     ],
                   ),
                   Padding(
@@ -491,12 +484,9 @@ class _EpidemicMapState extends State<EpidemicMap> {
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold)),
                       Expanded(
-                          child: Text(epidemic.newslist[0].desc.remark3
-                              .substring(
-                                  epidemic.newslist[0].desc.remark3
-                                          .indexOf("：") +
-                                      1,
-                                  epidemic.newslist[0].desc.remark3.length)))
+                          child: Text(epidemic.data.desc.remark3.substring(
+                              epidemic.data.desc.remark3.indexOf("：") + 1,
+                              epidemic.data.desc.remark3.length)))
                     ],
                   )
                 ],
@@ -520,7 +510,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
               Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
               ),
-              Image.network(epidemic.newslist[0].desc.imgUrl),
+              Image.network(epidemic.data.desc.imgUrl),
               Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
               ),
@@ -530,7 +520,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
-                      child: Text("疫情趋势图：",
+                      child: Text("全国疫情趋势：",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 14.0,
@@ -552,7 +542,23 @@ class _EpidemicMapState extends State<EpidemicMap> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
-                      child: Text("全国疫情实时增加：",
+                      child: Text("对比河北疫情趋势：",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+              swiperWidget1,
+              Card(
+                color: Colors.teal[200],
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
+                      child: Text("疫情实时增加：",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 14.0,
@@ -584,11 +590,34 @@ class _EpidemicMapState extends State<EpidemicMap> {
         autoplay: true,
         itemBuilder: (BuildContext context, int index) {
           return Image.network(
-            epidemic.newslist[0].desc.dailyPics[index],
+            epidemic.data.desc.quanguoTrendChart[index].imgUrl,
             fit: BoxFit.fill,
           );
         },
-        itemCount: epidemic.newslist[0].desc.dailyPics.length,
+        itemCount: epidemic.data.desc.quanguoTrendChart.length,
+        pagination: SwiperPagination(
+            builder: DotSwiperPaginationBuilder(
+                activeColor: Color.fromRGBO(255, 53, 39, 1),
+                size: 5.0,
+                color: Color.fromRGBO(203, 206, 213, 1),
+                activeSize: 5.0)),
+      ),
+      constraints:
+          BoxConstraints.loose(Size(MediaQuery.of(context).size.width, 180.0)),
+    );
+  }
+
+  void _swiperWidget1(Epidemi epidemic, BuildContext context) {
+    swiperWidget1 = ConstrainedBox(
+      child: Swiper(
+        autoplay: true,
+        itemBuilder: (BuildContext context, int index) {
+          return Image.network(
+            epidemic.data.desc.hbFeiHbTrendChart[index].imgUrl,
+            fit: BoxFit.fill,
+          );
+        },
+        itemCount: epidemic.data.desc.hbFeiHbTrendChart.length,
         pagination: SwiperPagination(
             builder: DotSwiperPaginationBuilder(
                 activeColor: Color.fromRGBO(255, 53, 39, 1),
@@ -603,17 +632,17 @@ class _EpidemicMapState extends State<EpidemicMap> {
 
   void _expansionPanelListWidget(Epidemi epidemic) {
     ExpansionPanelList1.clear();
-    for (int i = 0; i < epidemic.newslist[0].newslistCase.length; i++) {
+    for (int i = 0; i < epidemic.data.chinaAdd.length; i++) {
       ExpansionPanelList1.add(ExpansionPanel(
         headerBuilder: (context, isExpanded) {
           return ListTile(
             title: Text(
-              epidemic.newslist[0].newslistCase[i].provinceName,
+              epidemic.data.chinaAdd[i].provinceName,
               style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
               DateTime.fromMillisecondsSinceEpoch(
-                      epidemic.newslist[0].newslistCase[i].modifyTime)
+                      epidemic.data.chinaAdd[i].modifyTime)
                   .toString()
                   .substring(0, 19),
               style: TextStyle(
@@ -639,8 +668,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              epidemic
-                                  .newslist[0].newslistCase[i].confirmedCount
+                              epidemic.data.chinaAdd[i].confirmedCount
                                   .toString(),
                               style: TextStyle(
                                   color: Colors.orange,
@@ -670,8 +698,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                                epidemic
-                                    .newslist[0].newslistCase[i].suspectedCount
+                                epidemic.data.chinaAdd[i].suspectedCount
                                     .toString(),
                                 style: TextStyle(
                                     color: Colors.red[300],
@@ -699,9 +726,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Text(
-                                epidemic.newslist[0].newslistCase[i].deadCount
-                                    .toString(),
+                            Text(epidemic.data.chinaAdd[i].deadCount.toString(),
                                 style: TextStyle(
                                     color: Colors.redAccent,
                                     fontWeight: FontWeight.bold,
@@ -729,8 +754,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                                epidemic.newslist[0].newslistCase[i].curedCount
-                                    .toString(),
+                                epidemic.data.chinaAdd[i].curedCount.toString(),
                                 style: TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
@@ -754,7 +778,7 @@ class _EpidemicMapState extends State<EpidemicMap> {
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 10, top: 10),
-                child: Text(epidemic.newslist[0].newslistCase[i].tags,
+                child: Text(epidemic.data.chinaAdd[i].tags,
                     style:
                         TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)),
               ),

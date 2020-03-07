@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 
 import 'package:lpinyin/lpinyin.dart';
+import 'package:nav_router/nav_router.dart';
 
 class RealTimeNews extends StatefulWidget {
   RealTimeNews({Key key}) : super(key: key);
@@ -145,23 +146,23 @@ class _RealTimeNewsState extends State<RealTimeNews> {
                     Column(
                       children: tableListWidget,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                    ),
-                    Card(
-                      color: Colors.red[200],
-                      child: Padding(
-                        child: Text(
-                          "最新疫情新闻：",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              color: Colors.white),
-                        ),
-                        padding: EdgeInsets.only(
-                            top: 10.0, left: 10.0, bottom: 10.0),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(top: 20),
+                    // ),
+                    // Card(
+                    //   color: Colors.red[200],
+                    //   child: Padding(
+                    //     child: Text(
+                    //       "最新疫情新闻：",
+                    //       style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 13.0,
+                    //           color: Colors.white),
+                    //     ),
+                    //     padding: EdgeInsets.only(
+                    //         top: 10.0, left: 10.0, bottom: 10.0),
+                    //   ),
+                    // ),
                     Column(
                       children: newsListWidget,
                     )
@@ -226,16 +227,18 @@ class _RealTimeNewsState extends State<RealTimeNews> {
                                 newslist[i].provinceShortName,
                                 separator: "",
                                 format: PinyinFormat.WITHOUT_TONE);
+                            if (text == "xicang") {
+                              text = "xizang";
+                            }
                           }
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) {
-                            return Browser(
-                              url:
-                                  "https://news.sina.cn/project/fy2020/yq_province.shtml?province=" +
-                                      text,
-                              title: newslist[i].provinceShortName,
-                            );
-                          }));
+                          routePush(
+                              Browser(
+                                url:
+                                    "https://news.sina.cn/project/fy2020/yq_province.shtml?province=" +
+                                        text,
+                                title: newslist[i].provinceShortName,
+                              ),
+                              RouterType.scale);
                         })
                   ],
                 ),
@@ -418,8 +421,8 @@ class _RealTimeNewsState extends State<RealTimeNews> {
           Padding(
             padding: EdgeInsets.only(top: 2),
           ),
-          Offstage(
-              offstage: i != flag,
+          Visibility(
+              visible: i == flag,
               child: Column(
                 children: cityListWidget,
               ))
@@ -434,9 +437,11 @@ class _RealTimeNewsState extends State<RealTimeNews> {
     final news = newsFromJson(convert.jsonEncode(snap.data[0]));
     newsListWidget.clear();
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 50; i++) {
       Widget newsWidget = InkWell(
         child: Card(
+          borderOnForeground: false,
+          elevation: 0.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,12 +506,12 @@ class _RealTimeNewsState extends State<RealTimeNews> {
         ),
         onTap: () {
           ///更具数据返回的链接，跳转到web页面
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-            return Browser(
-              url: news[i].sourceUrl,
-              title: "新闻详情",
-            );
-          }));
+          routePush(
+              Browser(
+                url: news[i].sourceUrl,
+                title: "新闻详情",
+              ),
+              RouterType.scale);
         },
       );
       newsListWidget.add(newsWidget);
